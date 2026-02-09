@@ -137,6 +137,7 @@ class nginx (
   $nginx_upstreams                = {},
   $nginx_vhosts                   = {},
   $nginx_vhosts_defaults          = {},
+  $add_listen_directive           = $nginx::params::add_listen_directive,
   ### END Hiera Lookups ###
 ) inherits ::nginx::params {
 
