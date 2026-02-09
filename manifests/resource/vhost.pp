@@ -268,6 +268,7 @@ define nginx::resource::vhost (
   $server_name                  = [$name],
   $www_root                     = undef,
   $rewrite_www_to_non_www       = false,
+  $rewrite_non_www_to_www       = false,
   $rewrite_to_https             = undef,
   $location_custom_cfg          = undef,
   $location_cfg_prepend         = undef,
@@ -572,6 +573,10 @@ define nginx::resource::vhost (
   validate_string($group)
   validate_re($mode, '^\d{4}$',
     "${mode} is not valid. It should be 4 digits (0644 by default).")
+
+  if $rewrite_www_to_non_www == true and $rewrite_non_www_to_www == true {
+    fail('You must not set both $rewrite_www_to_non_www and $rewrite_non_www_to_www to true')
+  }
 
   # Variables
   if $::nginx::config::confd_only {

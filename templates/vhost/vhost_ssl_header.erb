@@ -1,5 +1,5 @@
 # MANAGED BY PUPPET
-<% if @rewrite_www_to_non_www -%>
+<% if @rewrite_www_to_non_www || @rewrite_non_www_to_www -%>
 <%- @server_name.each do |s| -%>
 server {
   <%- if @listen_ip.is_a?(Array) then -%>
@@ -19,8 +19,13 @@ server {
   listen       [<%= @ipv6_listen_ip %>]:<%= @ssl_port %> ssl<% if @http2 == 'on' %> http2<% end %><% if @spdy == 'on' %> spdy<% end %><% if @ipv6_listen_options %> <%= @ipv6_listen_options %><% end %>;
     <%- end -%>
   <%- end -%>
+<%- if @rewrite_www_to_non_www -%>
   server_name  www.<%= s.gsub(/^www\./, '') %>;
   return       301 https://<%= s.gsub(/^www\./, '') %>$request_uri;
+<%- elsif @rewrite_non_www_to_www %>
+  server_name  <%= s.gsub(/^www\./, '') %>;
+  return       301 https://www.<%= s %>$request_uri;
+<%- end -%>
 
 <%= scope.function_template(["nginx/vhost/vhost_ssl_settings.erb"]) %>
 
