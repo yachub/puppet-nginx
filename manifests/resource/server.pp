@@ -227,7 +227,6 @@ define nginx::resource::server (
   Array[String] $server_name                                                     = [$name],
   Optional[String] $www_root                                                     = undef,
   Boolean $rewrite_www_to_non_www                                                = false,
-  Boolean $rewrite_non_www_to_www                                                = false,
   Optional[Hash] $location_custom_cfg                                            = undef,
   Optional[Hash] $location_cfg_prepend                                           = undef,
   Optional[Hash] $location_cfg_append                                            = undef,
@@ -277,10 +276,6 @@ define nginx::resource::server (
 
   if ! defined(Class['nginx']) {
     fail('You must include the nginx base class before using any defined resources')
-  }
-
-  if $rewrite_www_to_non_www == true and $rewrite_non_www_to_www == true {
-    fail('You must not set both $rewrite_www_to_non_www and $rewrite_non_www_to_www to true')
   }
 
   # Variables
