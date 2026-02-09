@@ -216,6 +216,7 @@ define nginx::resource::vhost (
   $ssl_dhparam                  = undef,
   $ssl_key                      = undef,
   $ssl_port                     = 443,
+  $ssl_prefer_server_ciphers    = $::nginx::ssl_prefer_server_ciphers,
   $ssl_protocols                = $::nginx::config::ssl_protocols,
   $ssl_buffer_size              = undef,
   $ssl_ciphers                  = $::nginx::config::ssl_ciphers,

@@ -82,6 +82,7 @@ class nginx (
   $worker_connections             = undef,
   $worker_processes               = undef,
   $worker_rlimit_nofile           = undef,
+  $ssl_prefer_server_ciphers      = 'on',
   ### END Nginx Configuration
 
   ### START Module/App Configuration ###
