@@ -168,6 +168,13 @@ define nginx::resource::location (
   $proxy_set_header     = $::nginx::config::proxy_set_header,
   $proxy_hide_header    = $::nginx::config::proxy_hide_header,
   $proxy_pass_header    = $::nginx::config::proxy_pass_header,
+  $grpc                 = undef,
+  $grpc_read_timeout    = $nginx::grpc_read_timeout,
+  $grpc_connect_timeout = $nginx::grpc_connect_timeout,
+  $grpc_set_header      = $nginx::grpc_set_header,
+  $grpc_hide_header     = $nginx::grpc_hide_header,
+  $grpc_pass_header     = $nginx::grpc_pass_header,
+  $grpc_buffer_size     = $nginx::grpc_buffer_size,
   $fastcgi              = undef,
   $fastcgi_param        = undef,
   $fastcgi_params       = "${::nginx::config::conf_dir}/fastcgi_params",
@@ -244,6 +251,15 @@ define nginx::resource::location (
   validate_array($proxy_set_header)
   validate_array($proxy_hide_header)
   validate_array($proxy_pass_header)
+  if ($grpc != undef) {
+    validate_string($grpc)
+  }
+  validate_string($grpc_read_timeout)
+  validate_string($grpc_connect_timeout)
+  validate_array($grpc_set_header)
+  validate_array($grpc_hide_header)
+  validate_array($grpc_pass_header)
+  validate_string($grpc_buffer_size)
   if ($fastcgi != undef) {
     validate_string($fastcgi)
   }
@@ -373,8 +389,8 @@ define nginx::resource::location (
   if ($vhost == undef) {
     fail('Cannot create a location reference without attaching to a virtual host')
   }
-  if !($www_root or $proxy or $location_alias or $stub_status or $fastcgi or $uwsgi or $location_custom_cfg or $internal or $try_files or $location_allow or $location_deny) {
-    fail("Cannot create a location reference without a www_root, proxy, location_alias, stub_status, fastcgi, uwsgi, location_custom_cfg, internal, try_files, location_allow, or location_deny defined in ${vhost}:${title}")
+  if !($www_root or $proxy or $grpc or $location_alias or $stub_status or $fastcgi or $uwsgi or $location_custom_cfg or $internal or $try_files or $location_allow or $location_deny) {
+    fail("Cannot create a location reference without a www_root, proxy, grpc, location_alias, stub_status, fastcgi, uwsgi, location_custom_cfg, internal, try_files, location_allow, or location_deny defined in ${vhost}:${title}")
   }
   if ($www_root and $proxy) {
     fail("Cannot define both directory and proxy in ${vhost}:${title}")
@@ -401,6 +417,8 @@ define nginx::resource::location (
   # Use proxy or fastcgi template if $proxy is defined, otherwise use directory template.
   if ($proxy != undef) {
     $content_real = template('nginx/vhost/locations/proxy.erb')
+  } elsif ($grpc != undef) {
+    $content_real = template('nginx/vhost/locations/grpc.erb')
   } elsif ($location_alias != undef) {
     $content_real = template('nginx/vhost/locations/alias.erb')
   } elsif ($stub_status != undef) {
