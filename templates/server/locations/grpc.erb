@@ -1,21 +1,3 @@
 <% if @grpc -%>
-    grpc_pass             <%= @grpc %>;
-    grpc_read_timeout     <%= @grpc_read_timeout %>;
-    grpc_connect_timeout  <%= @grpc_connect_timeout %>;
-    grpc_buffer_size      <%= @grpc_buffer_size %>;
-<% unless @grpc_set_header.nil? -%>
-    <%- @grpc_set_header.each do |header| -%>
-    grpc_set_header      <%= header %>;
-    <%- end -%>
-<% end -%>
-<% unless @grpc_hide_header.nil? -%>
-    <%- @grpc_hide_header.each do |header| -%>
-    grpc_hide_header      <%= header %>;
-    <%- end -%>
-<% end -%>
-<% unless @grpc_pass_header.nil? -%>
-    <%- @grpc_pass_header.each do |header| -%>
-    grpc_pass_header      <%= header %>;
-    <%- end -%>
-<% end -%>
+    grpc_pass <%= @grpc %>;
 <% end -%>
