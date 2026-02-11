@@ -169,12 +169,6 @@ define nginx::resource::location (
   $proxy_hide_header    = $::nginx::config::proxy_hide_header,
   $proxy_pass_header    = $::nginx::config::proxy_pass_header,
   $grpc                 = undef,
-  $grpc_read_timeout    = $nginx::grpc_read_timeout,
-  $grpc_connect_timeout = $nginx::grpc_connect_timeout,
-  $grpc_set_header      = $nginx::grpc_set_header,
-  $grpc_hide_header     = $nginx::grpc_hide_header,
-  $grpc_pass_header     = $nginx::grpc_pass_header,
-  $grpc_buffer_size     = $nginx::grpc_buffer_size,
   $fastcgi              = undef,
   $fastcgi_param        = undef,
   $fastcgi_params       = "${::nginx::config::conf_dir}/fastcgi_params",
@@ -254,12 +248,6 @@ define nginx::resource::location (
   if ($grpc != undef) {
     validate_string($grpc)
   }
-  validate_string($grpc_read_timeout)
-  validate_string($grpc_connect_timeout)
-  validate_array($grpc_set_header)
-  validate_array($grpc_hide_header)
-  validate_array($grpc_pass_header)
-  validate_string($grpc_buffer_size)
   if ($fastcgi != undef) {
     validate_string($fastcgi)
   }
